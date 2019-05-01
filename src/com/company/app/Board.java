@@ -35,6 +35,13 @@ public class Board {
         return tiles;
     }
 
+    public int getIndex(Tile tile){
+        for(int i = 0 ; i<tiles.length ; i++)
+            if(tiles[i].equals(tile))
+                return i;
+        return -1;
+    }
+
     public void draw(Graphics g) {
         for (Tile t : tiles) {
             t.draw(g);

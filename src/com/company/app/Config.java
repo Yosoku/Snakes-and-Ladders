@@ -1,5 +1,7 @@
 package com.company.app;
 
+import java.awt.*;
+
 public class Config {
     public static final int WINDOW_WIDTH = 900;
     public static final int WINDOW_HEIGHT = 900;
@@ -11,6 +13,12 @@ public class Config {
     public static final int PLAYER_WIDTH = 40;
     public static final int xOffset = Config.X_RESOLUTION / 2 - 8;
     public static final int yOffset = Config.Y_RESOLUTION / 2 + 10;
+    public static final int NUM_LADDERS = 5;
+    public static final int NUM_SNAKES = 5;
+
+    public static Color[] playerColors = {Color.red,Color.cyan,Color.yellow};
+
+
 
 
     public static String toString1() {

@@ -1,28 +1,59 @@
 package com.company;
+
 import Freddie.src.app.*;
 import com.company.app.*;
 
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 
-public class SnakesLadders extends FCanvas implements KeyListener {
+public class SnakesLadders extends FCanvas implements MouseListener {
     private Board board;
-    private Player player;
-    private Random dice;
+    private Players players;
+    private Dice dice;
+    SnakeOrLadder[] ladders;
 
     SnakesLadders(int width, int height) {
         this.width = width;
         this.height = height;
         setFPSLOG(false);
-        addKeyListener(this);
+        addMouseListener(this);
+    }
+
+    private void setUpLadders() {
+        int lads = Config.NUM_LADDERS;
+        int i = 0;
+        Random rand = new Random();
+        Tile bot, top;
+        //Don't access Tiles that are already ladders or Snakers
+        while (i < Config.NUM_LADDERS + Config.NUM_SNAKES) {
+            int r2 = rand.nextInt(Config.COLS * Config.COLS / 2);
+            int r1 = rand.nextInt(Config.COLS * Config.COLS - 50) + 50;
+            for (; true; ) {
+                if (board.getTiles()[r1].getType() != Type.NORMAL)
+                    r1 = rand.nextInt(Config.COLS * Config.COLS - 50) + 50;
+                if (board.getTiles()[r2].getType() != Type.NORMAL)
+                    r2 = rand.nextInt(Config.COLS * Config.COLS / 2);
+                if(board.getTiles()[r1].getType()==Type.NORMAL&&board.getTiles()[r2].getType()==Type.NORMAL)
+                    break;
+            }
+            bot = board.getTiles()[r2];
+            top = board.getTiles()[r1];
+            if (lads > 0) {
+                ladders[i] = new Ladder(bot, top);
+                lads--;
+            } else
+                ladders[i] = new Snake(bot, top);
+            i++;
+        }
+
     }
 
     public static void main(String[] args) {
         SnakesLadders sn = new SnakesLadders(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT);
-        FWindow window = new FWindow(Config.WINDOW_WIDTH, Config.WINDOW_HEIGHT + 28, "Snakes and Ladders", sn);
+        FWindow window = new FWindow(Config.WINDOW_WIDTH + 150, Config.WINDOW_HEIGHT + 28, "Snakes and Ladders", sn);
         window.setLocationRelativeTo(null);
         window.setResizable(false);
         System.out.println(Config.toString1());
@@ -32,41 +63,84 @@ public class SnakesLadders extends FCanvas implements KeyListener {
 
     @Override
     public void init() {
-        setBackground(Color.black);
+        setBackground(Color.gray);
         board = new Board();
-        player = new Player(Color.red, board.getTiles()[0]);
-        dice = new Random();
+        dice = new Dice(Config.WINDOW_WIDTH, 400);
+        ladders = new SnakeOrLadder[Config.NUM_SNAKES + Config.NUM_LADDERS];
+        setUpLadders();
+        players = new Players(2,board.getTiles()[0]);
+
     }
 
     @Override
     public void draw(Graphics g) {
         board.draw(g);
-        player.draw(g);
+        players.draw(g);
+        dice.draw(g);
+        for (SnakeOrLadder sl : ladders)
+            sl.draw(g);
     }
 
 
     @Override
     public void update() {
-        if (player.getMovesLeft() > 0)
-            player.move();
-        if (player.getMovesLeft() == 0)
-            player.setMovesLeft(dice.nextInt(7) + 1);
-
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
+        players.update(board);
 
 
     }
 
+
+    /**
+     * Invoked when the mouse button has been clicked (pressed
+     * and released) on a component.
+     *
+     * @param e
+     */
     @Override
-    public void keyReleased(KeyEvent e) {
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    /**
+     * Invoked when a mouse button has been pressed on a component.
+     *
+     * @param e
+     */
+    @Override
+    public void mousePressed(MouseEvent e) {
+        Point mousePress = e.getPoint();
+        if (dice.contains(mousePress))
+            players.getCurrentPlayer().setMovesLeft(dice.rollDice());
+        System.out.println(players.getCurrentPlayer().getMovesLeft());
+    }
+
+    /**
+     * Invoked when a mouse button has been released on a component.
+     *
+     * @param e
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    /**
+     * Invoked when the mouse enters a component.
+     *
+     * @param e
+     */
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    /**
+     * Invoked when the mouse exits a component.
+     *
+     * @param e
+     */
+    @Override
+    public void mouseExited(MouseEvent e) {
 
     }
 }
