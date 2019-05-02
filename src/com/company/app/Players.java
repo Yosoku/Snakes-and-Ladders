@@ -21,13 +21,19 @@ public class Players {
             currentPlayer = 0;
     }
 
+    public boolean someonePlaying(){
+        for(Piece p :players){
+            if(p.getMovesLeft()>0)
+                return true;
+        }
+        return false;
+    }
 
     public void update(Board board){
         for ( Piece p : players) {
             if(p.getMovesLeft()>0)
                 p.update(board);
-            else
-                cycleTurn();
+          //  System.out.println(p.toString());
         }
     }
 

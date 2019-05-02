@@ -4,6 +4,7 @@ import Freddie.src.app.*;
 import com.company.app.*;
 
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -19,7 +20,6 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         this.width = width;
         this.height = height;
         setFPSLOG(false);
-        addMouseListener(this);
     }
 
     private void setUpLadders() {
@@ -30,13 +30,13 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         //Don't access Tiles that are already ladders or Snakers
         while (i < Config.NUM_LADDERS + Config.NUM_SNAKES) {
             int r2 = rand.nextInt(Config.COLS * Config.COLS / 2);
-            int r1 = rand.nextInt(Config.COLS * Config.COLS - 50) + 50;
+            int r1 = rand.nextInt(Config.COLS * Config.COLS - Config.COLS * Config.COLS/2) + Config.COLS * Config.COLS/2;
             for (; true; ) {
                 if (board.getTiles()[r1].getType() != Type.NORMAL)
-                    r1 = rand.nextInt(Config.COLS * Config.COLS - 50) + 50;
+                    r1 = rand.nextInt(Config.COLS * Config.COLS - Config.COLS * Config.COLS/2) + Config.COLS * Config.COLS/2;
                 if (board.getTiles()[r2].getType() != Type.NORMAL)
                     r2 = rand.nextInt(Config.COLS * Config.COLS / 2);
-                if(board.getTiles()[r1].getType()==Type.NORMAL&&board.getTiles()[r2].getType()==Type.NORMAL)
+                if (board.getTiles()[r1].getType() == Type.NORMAL && board.getTiles()[r2].getType() == Type.NORMAL)
                     break;
             }
             bot = board.getTiles()[r2];
@@ -56,6 +56,7 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         FWindow window = new FWindow(Config.WINDOW_WIDTH + 150, Config.WINDOW_HEIGHT + 28, "Snakes and Ladders", sn);
         window.setLocationRelativeTo(null);
         window.setResizable(false);
+        window.setIconImage(new ImageIcon("res/snakeIcon.jpg").getImage());
         System.out.println(Config.toString1());
         sn.start();
 
@@ -63,13 +64,19 @@ public class SnakesLadders extends FCanvas implements MouseListener {
 
     @Override
     public void init() {
-        setBackground(Color.gray);
+        setBackground(Color.YELLOW);
         board = new Board();
         dice = new Dice(Config.WINDOW_WIDTH, 400);
+        addMouseListener(this);
         ladders = new SnakeOrLadder[Config.NUM_SNAKES + Config.NUM_LADDERS];
         setUpLadders();
-        players = new Players(2,board.getTiles()[0]);
+        players = new Players(Config.NUMBER_OF_PLAYERS, board.getTiles()[0]);
 
+    }
+
+    @Override
+    public void update() {
+        players.update(board);
     }
 
     @Override
@@ -82,13 +89,25 @@ public class SnakesLadders extends FCanvas implements MouseListener {
     }
 
 
+    /**
+     * Invoked when a mouse button has been pressed on a component.
+     *
+     * @param e
+     */
     @Override
-    public void update() {
-        players.update(board);
-
-
+    public void mousePressed(MouseEvent e) {
+        Point mousePress = e.getPoint();
+        if (dice.contains(mousePress)) {
+            if (players.someonePlaying()){
+                System.out.println("Someone is playing tho");
+                return;
+            }
+            else {
+                players.getCurrentPlayer().setMovesLeft(dice.rollDice());
+                players.cycleTurn();
+            }
+        }
     }
-
 
     /**
      * Invoked when the mouse button has been clicked (pressed
@@ -99,19 +118,6 @@ public class SnakesLadders extends FCanvas implements MouseListener {
     @Override
     public void mouseClicked(MouseEvent e) {
 
-    }
-
-    /**
-     * Invoked when a mouse button has been pressed on a component.
-     *
-     * @param e
-     */
-    @Override
-    public void mousePressed(MouseEvent e) {
-        Point mousePress = e.getPoint();
-        if (dice.contains(mousePress))
-            players.getCurrentPlayer().setMovesLeft(dice.rollDice());
-        System.out.println(players.getCurrentPlayer().getMovesLeft());
     }
 
     /**

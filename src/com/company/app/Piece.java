@@ -17,11 +17,12 @@ public class Piece {
         this.currentTile = currentTile;
     }
 
+    public int getMovesLeft() {
+        return this.movesLeft;
+    }
 
-    public void draw(Graphics g) {
-        g.setColor(pColor);
-        int rad = Config.PLAYER_WIDTH / 2;
-        g.fillOval(this.xPos + Config.xOffset - rad, this.yPos + Config.yOffset - rad, rad * 2, rad * 2);
+    public void setMovesLeft(int m) {
+        this.movesLeft = m;
     }
     //TODO Messy code
     public void move(Board board) {
@@ -52,15 +53,25 @@ public class Piece {
         this.yPos = this.currentTile.getyPos();
         this.movesLeft--;
     }
+
+
     public void update(Board board){
         if (this.getMovesLeft() > 0)
             this.move(board);
     }
-    public int getMovesLeft() {
-        return this.movesLeft;
+
+    public void draw(Graphics g) {
+        g.setColor(pColor);
+        int rad = Config.PLAYER_WIDTH / 2;
+
+        g.fillOval(this.xPos + Config.xOffset - rad, this.yPos + Config.yOffset - rad, rad * 2, rad * 2);
     }
 
-    public void setMovesLeft(int m) {
-        this.movesLeft = m;
+
+
+
+
+    public String toString(){
+        return "Player position :(" + this.xPos + ","+this.yPos +") Color : " +pColor+" Moves left :" +movesLeft +"\n";
     }
 }

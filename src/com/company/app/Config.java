@@ -9,7 +9,7 @@ public class Config {
     public static final int COLS = 10;
     public static final int X_RESOLUTION = WINDOW_WIDTH / COLS;
     public static final int Y_RESOLUTION = WINDOW_HEIGHT / ROWS;
-    public static final int NUMBER_OF_PLAYERS = 1;
+    public static final int NUMBER_OF_PLAYERS = 3;
     public static final int PLAYER_WIDTH = 40;
     public static final int xOffset = Config.X_RESOLUTION / 2 - 8;
     public static final int yOffset = Config.Y_RESOLUTION / 2 + 10;

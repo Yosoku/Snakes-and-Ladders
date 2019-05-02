@@ -54,7 +54,7 @@ public class Tile {
         if ((this.number % 2) == 0)
             g.setColor(Color.white);
         else
-            g.setColor(Color.black);
+            g.setColor(Color.gray);
         //Draw Tile
         g.fillRect(this.xPos, this.yPos, Config.X_RESOLUTION, Config.Y_RESOLUTION);
         //Draw Number on Tile
