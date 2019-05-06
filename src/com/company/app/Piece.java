@@ -1,6 +1,7 @@
 package com.company.app;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class Piece {
     private int xPos;
@@ -8,13 +9,15 @@ public class Piece {
     private Color pColor;
     private Tile currentTile;
     private int movesLeft = 0;
+    private BufferedImage image = null;
 
 
-    public Piece(Color c, Tile currentTile) {
+    public Piece(Color c, Tile currentTile,String path) {
         this.xPos = currentTile.getxPos();
         this.yPos = currentTile.getyPos();
         this.pColor = c;
         this.currentTile = currentTile;
+        image = BufferedImageLoader.loadBufferedImage(path);
     }
 
     public int getMovesLeft() {
@@ -26,13 +29,9 @@ public class Piece {
     }
     //TODO Messy code
     public void move(Board board) {
-        if(this.currentTile.getType()==Type.NORMAL)
+        if(this.movesLeft ==1 || this.currentTile.getType()==Type.NORMAL)
             this.currentTile = this.currentTile.getNext();
-        if(this.currentTile.getType() ==Type.SNAKE && this.movesLeft==1)
-            this.currentTile = this.currentTile.getNext();
-        if(this.currentTile.getType() ==Type.LADDER && this.movesLeft==1)
-            this.currentTile = this.currentTile.getNext();
-        if(this.currentTile.getType() ==Type.SNAKE && this.movesLeft>1)
+        if( (this.currentTile.getType() ==Type.SNAKE || this.currentTile.getType()==Type.LADDER) && this.movesLeft>1)
         {
             this.xPos = this.currentTile.getxPos();
             this.yPos = this.currentTile.getyPos();
@@ -40,15 +39,6 @@ public class Piece {
             this.currentTile = board.getTiles()[i+1];
             this.movesLeft--;
         }
-        if(this.currentTile.getType() ==Type.LADDER && this.movesLeft>1)
-        {
-            this.xPos = this.currentTile.getxPos();
-            this.yPos = this.currentTile.getyPos();
-            int i = board.getIndex(this.currentTile);
-            this.currentTile = board.getTiles()[i+1];
-            this.movesLeft--;
-        }
-
         this.xPos = this.currentTile.getxPos();
         this.yPos = this.currentTile.getyPos();
         this.movesLeft--;
@@ -63,8 +53,8 @@ public class Piece {
     public void draw(Graphics g) {
         g.setColor(pColor);
         int rad = Config.PLAYER_WIDTH / 2;
-
-        g.fillOval(this.xPos + Config.xOffset - rad, this.yPos + Config.yOffset - rad, rad * 2, rad * 2);
+        g.drawImage(image,xPos,yPos,null);
+        //g.fillOval(this.xPos + Config.xOffset - rad, this.yPos + Config.yOffset - rad, rad * 2, rad * 2);
     }
 
 

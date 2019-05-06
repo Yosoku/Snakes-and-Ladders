@@ -9,7 +9,7 @@ public class Players {
         currentPlayer = 0;
         players = new Piece[numofplayers];
         for (int i = 0; i < numofplayers; i++) {
-            players[i] = new Piece(Config.playerColors[i],start);
+            players[i] = PieceFactory.createPiece(Config.playerColors[i],start);
         }
     }
 

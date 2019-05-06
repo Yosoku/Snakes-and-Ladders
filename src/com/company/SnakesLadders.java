@@ -15,6 +15,7 @@ public class SnakesLadders extends FCanvas implements MouseListener {
     private Players players;
     private Dice dice;
     SnakeOrLadder[] ladders;
+    Ladder lad;
 
     SnakesLadders(int width, int height) {
         this.width = width;
@@ -57,7 +58,7 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         window.setLocationRelativeTo(null);
         window.setResizable(false);
         window.setIconImage(new ImageIcon("res/snakeIcon.jpg").getImage());
-        System.out.println(Config.toString1());
+
         sn.start();
 
     }
@@ -68,10 +69,10 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         board = new Board();
         dice = new Dice(Config.WINDOW_WIDTH, 400);
         addMouseListener(this);
-        ladders = new SnakeOrLadder[Config.NUM_SNAKES + Config.NUM_LADDERS];
-        setUpLadders();
+       // ladders = new SnakeOrLadder[Config.NUM_SNAKES + Config.NUM_LADDERS];
+        //setUpLadders();
         players = new Players(Config.NUMBER_OF_PLAYERS, board.getTiles()[0]);
-
+        lad = new Ladder(board.getTiles()[10],board.getTiles()[55]);
     }
 
     @Override
@@ -84,8 +85,9 @@ public class SnakesLadders extends FCanvas implements MouseListener {
         board.draw(g);
         players.draw(g);
         dice.draw(g);
-        for (SnakeOrLadder sl : ladders)
-            sl.draw(g);
+        lad.draw(g);
+//        for (SnakeOrLadder sl : ladders)
+//            sl.draw(g);
     }
 
 
@@ -117,7 +119,10 @@ public class SnakesLadders extends FCanvas implements MouseListener {
      */
     @Override
     public void mouseClicked(MouseEvent e) {
-
+            for(Tile t :board.getTiles()){
+                if(t.contains(e.getPoint()))
+                    System.out.println(t.getSin());
+            }
     }
 
     /**

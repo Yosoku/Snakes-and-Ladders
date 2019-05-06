@@ -97,4 +97,17 @@ public class Tile {
 
     }
 
+
+
+
+    public boolean contains(Point p){
+        if (p.x >= xPos && p.x < xPos + Config.X_RESOLUTION)
+            if (p.y > yPos && p.y < yPos + Config.Y_RESOLUTION)
+                return true;
+        return false;
+    }
+
+    public double getSin(){
+        return Math.toDegrees(Math.asin(yPos/Math.sqrt(xPos*xPos+yPos*yPos)));
+    }
 }

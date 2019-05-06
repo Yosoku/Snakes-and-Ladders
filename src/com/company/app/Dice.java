@@ -16,12 +16,16 @@ public class Dice {
         this.yPos = y;
         this.xPos = x;
         dice = new Random();
-        img = BufferedImageLoader.loadBufferedImage("res/dice6.png");
+        img = BufferedImageLoader.loadBufferedImage("res//Dice/dice6.png");
     }
 
+    /**
+     *
+     * @return A random number between 1 and 6
+     */
     public int rollDice() {
         int roll = dice.nextInt(6) + 1;
-        String path = "res/dice" + roll +".png";
+        String path = "res/Dice/dice" + roll +".png";
         img = BufferedImageLoader.loadBufferedImage(path);
         return roll;
     }
@@ -35,9 +39,6 @@ public class Dice {
 
     public void draw(Graphics g) {
         g.setColor(Color.yellow);
-        int sx = xPos*width;
-        int sy = yPos*height;
-
         g.drawImage(img,xPos,yPos,width,height,null);
     }
 
